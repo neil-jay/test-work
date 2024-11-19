@@ -30,6 +30,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Fetch latest changes
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+
       - name: Determine current version
         id: current_version
         run: |
@@ -47,12 +52,17 @@ jobs:
           npm run release
           new_version=$(node -p "require('./package.json').version")
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
-          
+
+      - name: Commit changes
+        run: |
+          git add .
+          git commit -m "chore(release): ${{ steps.release.outputs.new_version }}" || echo "No changes to commit"
+
       - name: Push changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git push --follow-tags origin main
+          git push --follow-tags origin main || (git pull --rebase origin main && git push --follow-tags origin main)
 
       - name: Create GitHub Release
         env:
