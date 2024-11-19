@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/neil-jay/test-work/compare/v0.1.7...v0.1.8) (2024-11-19)
+
+
+### Bug Fixes
+
+* fix for decoding ([76608b3](https://github.com/neil-jay/test-work/commit/76608b3d0973ac1c46e71bdc7e8a3823f5f13f13))
+
 ### [0.1.7](https://github.com/neil-jay/test-work/compare/v0.1.6...v0.1.7) (2024-11-19)
 
 
