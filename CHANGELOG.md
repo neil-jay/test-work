@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/neil-jay/test-work/compare/v0.1.6...v0.1.7) (2024-11-19)
+
+
+### Features
+
+* Update to Release page ([95ff336](https://github.com/neil-jay/test-work/commit/95ff336b6852473295f3ddbd047869977eb5a4f9))
+
 ### [0.1.6](https://github.com/neil-jay/test-work/compare/v0.1.5...v0.1.6) (2024-11-19)
 
 
