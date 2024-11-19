@@ -3,16 +3,17 @@ name: Version, Changelog, and Release
 on:
   push:
     branches:
-      - main  # or your default branch name
+      - main  # Change this to your default branch name if different
 
 jobs:
   version-changelog-and-release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+    
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -20,20 +21,20 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: 'lts/*'  # This will use the latest LTS version of Node.js
 
       - name: Install dependencies
         run: npm ci
 
       - name: Configure Git
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 
       - name: Fetch latest changes
         run: |
-          git fetch origin main
-          git reset --hard origin/main
+          git fetch origin ${{ github.ref }}
+          git reset --hard origin/${{ github.ref_name }}
 
       - name: Determine current version
         id: current_version
@@ -62,7 +63,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git push --follow-tags origin main || (git pull --rebase origin main && git push --follow-tags origin main)
+          git push --follow-tags origin ${{ github.ref }} || (git pull --rebase origin ${{ github.ref }} && git push --follow-tags origin ${{ github.ref }})
 
       - name: Create GitHub Release
         env:
