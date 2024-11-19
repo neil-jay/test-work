@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/neil-jay/test-work/compare/v0.1.1...v0.1.2) (2024-11-19)
+
+
+### Features
+
+* **version:** Update to git action ([cc8b56d](https://github.com/neil-jay/test-work/commit/cc8b56dc1180933b741ab342f1abd5109e8bcadb))
+* **version:** Update to workflow ([bf21657](https://github.com/neil-jay/test-work/commit/bf21657a4043945a9d5404c86f9fa705ce1cdb0d))
+
 ### 0.1.1 (2024-11-19)
 
 
