@@ -1,9 +1,12 @@
 {
+    "name": "test-work",
+    "version": "0.1.0",
     "scripts": {
-        "release": "standard-version"
+      "release": "standard-version"
     },
     "devDependencies": {
-        "conventional-changelog-cli": "^5.0.0",
-        "standard-version": "^9.5.0"
+      "conventional-changelog-cli": "^5.0.0",
+      "standard-version": "^9.5.0"
     }
-}
+  }
+  
