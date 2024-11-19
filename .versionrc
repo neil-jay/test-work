@@ -9,6 +9,6 @@
     {"type": "perf", "hidden": true},
     {"type": "test", "hidden": true}
   ],
-  "commitUrlFormat": "https://github.com/your-username/your-repo/commit/{{hash}}",
-  "compareUrlFormat": "https://github.com/your-username/your-repo/compare/{{previousTag}}...{{currentTag}}"
+  "commitUrlFormat": "https://github.com/neil-jay/test-work/commit/{{hash}}",
+  "compareUrlFormat": "https://github.com/neil-jay/test-work/compare/{{previousTag}}...{{currentTag}}"
 }
