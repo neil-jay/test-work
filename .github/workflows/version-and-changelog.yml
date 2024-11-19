@@ -1,0 +1,34 @@
+name: Version and Changelog
+
+on:
+  push:
+    branches:
+      - main  # or your default branch name
+
+jobs:
+  version-and-changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # or your preferred Node.js version
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Configure Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Generate version and changelog
+        run: npm run release
+
+      - name: Push changes
+        run: |
+          git push --follow-tags origin main

@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "release": "standard-version"
+    },
+    "devDependencies": {
+        "conventional-changelog-cli": "^5.0.0",
+        "standard-version": "^9.5.0"
+    }
+}
