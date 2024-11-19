@@ -87,7 +87,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Decode the changelog content
+          DECODED_CHANGELOG=$(echo "${{ steps.changelog.outputs.content }}" | sed 's/%0A/\n/g; s/%25/%/g')
           gh release create "v${{ steps.release.outputs.new_version }}" \
             --title "Release v${{ steps.release.outputs.new_version }}" \
-            --notes "${{ steps.changelog.outputs.content }}" \
+            --notes "$DECODED_CHANGELOG" \
             --target ${{ github.ref_name }}
