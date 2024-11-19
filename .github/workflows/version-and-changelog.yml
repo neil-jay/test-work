@@ -3,7 +3,7 @@ name: Version, Changelog, and Release
 on:
   push:
     branches:
-      - main  # Change this to your default branch name if different
+      - main
 
 jobs:
   version-changelog-and-release:
@@ -50,18 +50,27 @@ jobs:
             echo "No version found in package.json, initializing to 0.1.0"
             npm version 0.1.0 --no-git-tag-version
           fi
-          npm run release
+          # Run standard-version but tell it to not create git tags - we'll do that later
+          npm run release -- --skip.tag true
           new_version=$(node -p "require('./package.json').version")
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
 
-      - name: Extract changelog
-        id: extract_changelog
+      - name: Extract changelog for release
+        id: changelog
         run: |
-          changelog=$(awk '/^## / {if (p) {exit}; if (!p) {p=1; next}} p' CHANGELOG.md)
-          changelog="${changelog//'%'/'%25'}"
-          changelog="${changelog//$'\n'/'%0A'}"
-          changelog="${changelog//$'\r'/'%0D'}"
-          echo "changelog=$changelog" >> $GITHUB_OUTPUT
+          # Get the latest version's changelog
+          CHANGELOG_CONTENT=$(awk '/^### \[/ {if (p) {exit}; if (!p) {p=1; next}} p' CHANGELOG.md | sed '/^### \[/d')
+          # Escape newlines and special characters for GitHub Actions
+          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//'%'/'%25'}"
+          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//$'\n'/'%0A'}"
+          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//$'\r'/'%0D'}"
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Git tag
+        run: |
+          git tag -a "v${{ steps.release.outputs.new_version }}" -m "Release v${{ steps.release.outputs.new_version }}"
 
       - name: Commit changes
         run: |
@@ -78,6 +87,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create v${{ steps.release.outputs.new_version }} \
+          gh release create "v${{ steps.release.outputs.new_version }}" \
             --title "Release v${{ steps.release.outputs.new_version }}" \
-            --notes "${{ steps.extract_changelog.outputs.changelog }}"
+            --notes "${{ steps.changelog.outputs.content }}" \
+            --target ${{ github.ref_name }}
