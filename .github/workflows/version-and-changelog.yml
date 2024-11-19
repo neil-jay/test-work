@@ -21,7 +21,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 'lts/*'  # This will use the latest LTS version of Node.js
+          node-version: 'lts/*'
 
       - name: Install dependencies
         run: npm ci
@@ -54,6 +54,15 @@ jobs:
           new_version=$(node -p "require('./package.json').version")
           echo "new_version=$new_version" >> $GITHUB_OUTPUT
 
+      - name: Extract changelog
+        id: extract_changelog
+        run: |
+          changelog=$(awk '/^## / {if (p) {exit}; if (!p) {p=1; next}} p' CHANGELOG.md)
+          changelog="${changelog//'%'/'%25'}"
+          changelog="${changelog//$'\n'/'%0A'}"
+          changelog="${changelog//$'\r'/'%0D'}"
+          echo "changelog=$changelog" >> $GITHUB_OUTPUT
+
       - name: Commit changes
         run: |
           git add .
@@ -69,7 +78,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          changelog=$(awk '/^## / {if (p) {exit}; if (!p) {p=1; next}} p' CHANGELOG.md)
           gh release create v${{ steps.release.outputs.new_version }} \
             --title "Release v${{ steps.release.outputs.new_version }}" \
-            --notes "$changelog"
+            --notes "${{ steps.extract_changelog.outputs.changelog }}"
